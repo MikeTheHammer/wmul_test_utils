@@ -58,30 +58,30 @@ def generate_true_false_matrix_from_namedtuple(input_namedtuple):
     that is of size len(input_tuple) and with the fields set to every combination of True and False.
     The list of ids is a list of strings that describe the corresponding tuples.
 
-    Given: input_tuple = namedtuple("my_test_flags", ["with_cheese", "with_ketchup", "with_mustard"])
+    Given: input_tuple = namedtuple("burger_toppings", ["with_cheese", "with_ketchup", "with_mustard"])
 
     true_false_matrix will be:
     [
-        my_test_flags(with_cheese=False, with_ketchup=False, with_mustard=False),
-        my_test_flags(with_cheese=True,  with_ketchup=False, with_mustard=False),
-        my_test_flags(with_cheese=False, with_ketchup=True,  with_mustard=False),
-        my_test_flags(with_cheese=True,  with_ketchup=True,  with_mustard=False),
-        my_test_flags(with_cheese=False, with_ketchup=False, with_mustard=True),
-        my_test_flags(with_cheese=True,  with_ketchup=False, with_mustard=True),
-        my_test_flags(with_cheese=False, with_ketchup=True,  with_mustard=True),
-        my_test_flags(with_cheese=True,  with_ketchup=True,  with_mustard=True)
+        burger_toppings(with_cheese=False, with_ketchup=False, with_mustard=False),
+        burger_toppings(with_cheese=True,  with_ketchup=False, with_mustard=False),
+        burger_toppings(with_cheese=False, with_ketchup=True,  with_mustard=False),
+        burger_toppings(with_cheese=True,  with_ketchup=True,  with_mustard=False),
+        burger_toppings(with_cheese=False, with_ketchup=False, with_mustard=True),
+        burger_toppings(with_cheese=True,  with_ketchup=False, with_mustard=True),
+        burger_toppings(with_cheese=False, with_ketchup=True,  with_mustard=True),
+        burger_toppings(with_cheese=True,  with_ketchup=True,  with_mustard=True)
     ]
 
-    test_ids
+    and test_ids will be:
     [
-        'my_test_flags(with_cheese=False, with_ketchup=False, with_mustard=False)',
-        'my_test_flags(with_cheese=True,  with_ketchup=False, with_mustard=False)',
-        'my_test_flags(with_cheese=False, with_ketchup=True,  with_mustard=False)',
-        'my_test_flags(with_cheese=True,  with_ketchup=True,  with_mustard=False)',
-        'my_test_flags(with_cheese=False, with_ketchup=False, with_mustard=True)',
-        'my_test_flags(with_cheese=True,  with_ketchup=False, with_mustard=True)',
-        'my_test_flags(with_cheese=False, with_ketchup=True,  with_mustard=True)',
-        'my_test_flags(with_cheese=True,  with_ketchup=True,  with_mustard=True)'
+        'burger_toppings(with_cheese=False, with_ketchup=False, with_mustard=False)',
+        'burger_toppings(with_cheese=True,  with_ketchup=False, with_mustard=False)',
+        'burger_toppings(with_cheese=False, with_ketchup=True,  with_mustard=False)',
+        'burger_toppings(with_cheese=True,  with_ketchup=True,  with_mustard=False)',
+        'burger_toppings(with_cheese=False, with_ketchup=False, with_mustard=True)',
+        'burger_toppings(with_cheese=True,  with_ketchup=False, with_mustard=True)',
+        'burger_toppings(with_cheese=False, with_ketchup=True,  with_mustard=True)',
+        'burger_toppings(with_cheese=True,  with_ketchup=True,  with_mustard=True)'
     ]
 
     Note that true_false_matrix is a list of namedtuples and test_ids is the list of the string representations of
