@@ -88,6 +88,10 @@ def generate_true_false_matrix_from_namedtuple(input_namedtuple):
     those same namedtuples.
     """
     number_of_args = len(input_namedtuple._fields)
+    
+    if number_of_args < 1:
+        raise ValueError("The named tuple passed in must have at least one field.")
+
     powers_of_two = {2**i: i for i in range(number_of_args)}
     these_args = []
     for i in range(number_of_args):
