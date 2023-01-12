@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "wmul_test_utils"
+version = "0.2.0"
+authors = [
+  { name="Michael Stanley", email="stanley50@marshall.edu" },
+]
+description = "Various utilities for testing WMUL-FM's other packages."
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Topic :: Software Development :: Testing"
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest", "pytest-mock"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/MikeTheHammer/wmul_test_utils"
+"Bug Tracker" = "https://github.com/MikeTheHammer/wmul_test_utils/issues"
