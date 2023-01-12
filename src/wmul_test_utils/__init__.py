@@ -8,11 +8,15 @@ make_namedtuple creates one-off named tuples for concisely passing data from the
 generate_true_false_matrix_from_named_tuple creates a list of true and false values, and a list of corresponding ids,
 to be passed into a test fixture.
 
+assert_has_only_these_calls asserts that the mock has been called with the specified calls and only the specified calls. 
+
 ============ Change Log ============
-10/1/2020 = Created.
+01/11/2023 = Added assert_has_only_these_calls
+
+10/01/2020 = Created.
 
 ============ License ============
-Copyright (C) 2020 Michael Stanley
+Copyright (C) 2023 Michael Stanley
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -110,3 +114,27 @@ def generate_true_false_matrix_from_namedtuple(input_namedtuple):
                 these_args[corresponding_index] = not these_args[corresponding_index]
 
     return true_false_matrix, test_ids
+
+
+def assert_has_only_these_calls(mock, calls, any_order=False):
+    """
+    assert the mock has been called with the specified calls and only
+    the specified calls. The counts are compared and then the 
+    `mock_calls` list is checked for the calls.
+
+    If `any_order` is False (the default) then the calls must be
+    sequential. 
+    
+    If `any_order` is True then the calls can be in any order, but
+    they must all appear in `mock_calls`.
+    """
+
+    provided_call_count = len(calls)
+
+    if not mock.call_count == provided_call_count:
+        msg = f"Expected {mock._mock_name or 'mock'} to be called " \
+              f" {provided_call_count} times. Called {mock.call_count} " \
+              f"times.{mock._calls_repr()}"
+        raise AssertionError(msg)
+    return mock.assert_has_calls(calls, any_order)
+
