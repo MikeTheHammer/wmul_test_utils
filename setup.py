@@ -1,13 +1,13 @@
 """
 @Author = 'Mike Stanley'
 
-Describe this file.
-
 ============ Change Log ============
-10/2/2020 = Created.
+01/12/2023 = Update version and copyright
+
+10/02/2020 = Created.
 
 ============ License ============
-Copyright (C) 2020 Michael Stanley
+Copyright (C) 2023 Michael Stanley
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='wmul_test_utils',
-    version='0.1.0',
+    version='0.2.0',
     license='GPLv2',
     description="'Various utilities for testing WMUL-FM's other packages.",
 
@@ -38,6 +38,6 @@ setup(
     package_dir={'': 'src'},
 
     install_requires=[],
-    tests_require=["pytest", "pyfakefs", "pytest-mock"],
+    tests_require=["pytest", "pytest-mock"],
     test_suite="tests"
 )
