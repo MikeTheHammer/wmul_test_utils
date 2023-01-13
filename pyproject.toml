@@ -28,6 +28,9 @@ dependencies = []
 test = [
   "pytest", "pytest-mock"
 ]
+tox = [
+  "tox"
+]
 
 [project.urls]
 "Homepage" = "https://github.com/MikeTheHammer/wmul_test_utils"
