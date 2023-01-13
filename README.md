@@ -75,3 +75,4 @@ they must all appear in `mock_calls`.
 assert the mock has been called with the specified calls and only
 the specified calls. The counts are compared and then `assert_has_calls` is called.
 
+This is the natural continuation of `assert_called_once_with` and is based on that method.

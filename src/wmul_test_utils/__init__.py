@@ -129,6 +129,9 @@ def assert_has_only_these_calls(mock, calls, any_order=False):
     
     If `any_order` is True then the calls can be in any order, but
     they must all appear in `mock_calls`.
+
+    This is the natural continuation of `assert_called_once_with` and is based 
+    on that method.
     """
 
     provided_call_count = len(calls)
