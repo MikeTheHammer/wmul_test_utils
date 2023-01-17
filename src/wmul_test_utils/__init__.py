@@ -3,14 +3,23 @@
 
 These are utilities that help with testing.
 
-make_namedtuple creates one-off named tuples for concisely passing data from the fixture method to the test methods.
+make_namedtuple creates one-off named tuples for concisely passing data from 
+the fixture method to the test methods.
 
-generate_true_false_matrix_from_named_tuple creates a list of true and false values, and a list of corresponding ids,
+generate_true_false_matrix_from_named_tuple creates a list of true and false 
+values, and a list of corresponding ids,
 to be passed into a test fixture.
 
-assert_has_only_these_calls asserts that the mock has been called with the specified calls and only the specified calls. 
+generate_true_false_matrix_from_list_of_strings is a convenience function
+It takes a string name and a list of strings, and returns the true-false matrix
+built from those values. 
+
+assert_has_only_these_calls asserts that the mock has been called with the 
+specified calls and only the specified calls. 
 
 ============ Change Log ============
+01/17/2023 = Added generate_true_false_matrix_from_list_of_strings
+
 01/11/2023 = Added assert_has_only_these_calls
 
 10/01/2020 = Created.
@@ -32,7 +41,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
-__version__ = "0.2.0"
+__version__ = "0.3.1"
 
 from collections import namedtuple
 
@@ -116,6 +125,28 @@ def generate_true_false_matrix_from_namedtuple(input_namedtuple):
                 these_args[corresponding_index] = not these_args[corresponding_index]
 
     return true_false_matrix, test_ids
+
+
+def generate_true_false_matrix_from_list_of_strings(name, input_strings):
+    """
+    A convenience function. It takes a string name and a list of strings, and 
+    returns the true-false matrix built from those values.
+    
+    generate_true_false_matrix_from_list_of_strings(
+        "burger_toppings", 
+        ["with_cheese", "with_ketchup", "with_mustard"]
+    )
+
+    is the equivalent of
+
+    burger_toppings = namedtuple(
+        "burger_toppings", 
+        ["with_cheese", "with_ketchup", "with_mustard"]
+    )
+    generate_true_false_matrix_from_namedtuple(burger_toppings)
+    """
+    named_tuple_for_generating = namedtuple(name, input_strings)
+    return generate_true_false_matrix_from_namedtuple(named_tuple_for_generating)
 
 
 def assert_has_only_these_calls(mock, calls, any_order=False):

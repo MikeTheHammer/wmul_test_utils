@@ -61,6 +61,27 @@ and `test_ids` will be:
 
 Note that true_false_matrix is a list of namedtuples and test_ids is a list of the string representations of those same namedtuples.
 
+## generate_true_false_matrix_from_list_of_strings(name, input_strings):
+A convenience function. It takes a string name and a list of strings, and 
+returns the true-false matrix built from those values.
+
+```
+generate_true_false_matrix_from_list_of_strings(
+    "burger_toppings",
+    ["with_cheese", "with_ketchup", "with_mustard"]
+)
+```
+
+is the equivalent of
+
+```
+burger_toppings = namedtuple(
+    "burger_toppings", 
+    ["with_cheese", "with_ketchup", "with_mustard"]
+)
+generate_true_false_matrix_from_namedtuple(burger_toppings)
+```
+
 ## assert_has_only_these_calls(mock, calls, any_order=False)
 `mock` a `unittest.mock` object.
 

@@ -120,3 +120,29 @@ def test_three_fields():
     assert sorted(result_matrix) == sorted(expected_matrix)
     assert sorted(result_ids) == sorted(expected_ids)
 
+
+def test_generate_from_list_of_strings(mocker):
+    mock_namedtuple = "mock_namedtuple"
+    mock_make_namedtuple = mocker.Mock(return_value=mock_namedtuple)
+    mocker.patch("wmul_test_utils.namedtuple", mock_make_namedtuple)
+
+    mock_true_false_matrix = "mock_true_false_matrix"
+    mock_generate_true_false_matrix = mocker.Mock(
+        return_value=mock_true_false_matrix
+        )
+    mocker.patch(
+        "wmul_test_utils.generate_true_false_matrix_from_namedtuple",
+        mock_generate_true_false_matrix
+    )
+
+    mock_name = "mock_name"
+    mock_input_strings = "mock_input_strings"
+
+    result = wmul_test_utils.generate_true_false_matrix_from_list_of_strings(
+        mock_name,
+        mock_input_strings
+    )
+
+    mock_make_namedtuple.assert_called_once_with(mock_name, mock_input_strings)
+    mock_generate_true_false_matrix.assert_called_once_with(mock_namedtuple)
+    assert result == mock_true_false_matrix
