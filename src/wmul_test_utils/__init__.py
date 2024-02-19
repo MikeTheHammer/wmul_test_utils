@@ -25,7 +25,7 @@ specified calls and only the specified calls.
 10/01/2020 = Created.
 
 ============ License ============
-Copyright (C) 2023 Michael Stanley
+Copyright (C) 2020, 2023-2024 Michael Stanley
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -101,28 +101,49 @@ def generate_true_false_matrix_from_namedtuple(input_namedtuple):
 
     Note that true_false_matrix is a list of namedtuples and test_ids is the list of the string representations of
     those same namedtuples.
+
+    Inline comments are based upon the burger_toppings named tuple.
     """
-    number_of_args = len(input_namedtuple._fields)
+    number_of_fields = len(input_namedtuple._fields)
     
-    if number_of_args < 1:
+    if number_of_fields < 1:
         raise ValueError("The named tuple passed in must have at least one field.")
 
-    powers_of_two = {2**i: i for i in range(number_of_args)}
-    these_args = []
-    for i in range(number_of_args):
-        these_args.append(False)
+    powers_of_two = {2**i: i for i in range(number_of_fields)}
+    '''
+    Creates a dictionary where the powers of two are mapped to their exponents for the exponents from
+    0 to <number_of_fields
+    E.G. given number_of_fields = 3, then powers_of_two = {1: 0, 2: 1, 4: 2}
+    '''
+
+    these_field_values = [False for i in range(number_of_fields)]
+    '''
+    Creates a list of False values for each field in the namedtuple.
+    This list will be used and manipulated to create instances of the namedtuple .
+    '''
 
     true_false_matrix = []
     test_ids = []
 
-    for i in range(1, 2**number_of_args + 1):
-        this_test_arg = input_namedtuple._make(these_args)
-        true_false_matrix.append(this_test_arg)
-        test_ids.append(str(this_test_arg))
+    for i in range(1, 2**number_of_fields + 1):
+        this_combination = input_namedtuple._make(these_field_values)
+        '''
+        Make an instance of the namedtuple using the current value of these_field_values. 
+        '''
+
+        true_false_matrix.append(this_combination)
+        test_ids.append(str(this_combination))
 
         for this_power_of_two, corresponding_index in powers_of_two.items():
             if i % this_power_of_two == 0:
-                these_args[corresponding_index] = not these_args[corresponding_index]
+                these_field_values[corresponding_index] = not these_field_values[corresponding_index]
+        '''
+        This for loop goes through the powers_of_two generated above. When it finds one that divided evenly 
+        into the current value of i, it flips the value in the corresponding index in these_field_values.
+        This means that the first value in these_field_values will be flipped every iteration, 
+        the second value will be flipped every other iteration, the third value will be flipped every 
+        fourth iteration, etc.
+        '''
 
     return true_false_matrix, test_ids
 
