@@ -195,3 +195,17 @@ def assert_has_only_these_calls(mock, calls, any_order=False):
         raise AssertionError(msg)
     return mock.assert_has_calls(calls, any_order)
 
+
+def assert_lists_contain_same_items(list1, list2):
+    """
+    Asserts that every item in list one is also in list2 and vice-versa, in any order. If they have to be in the same
+    order, use list1 == list2.
+
+    :param list1: The first list to compare.
+    :param list2: The second list to compare.
+    :raises AssertionError: If any item in one list is not also in the other list. 
+    """
+    for item in list1:
+        assert item in list2
+    for item in list2:
+        assert item in list1
