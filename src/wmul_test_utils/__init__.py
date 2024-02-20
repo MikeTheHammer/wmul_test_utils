@@ -3,21 +3,27 @@
 
 These are utilities that help with testing.
 
-make_namedtuple creates one-off named tuples for concisely passing data from 
-the fixture method to the test methods.
+make_namedtuple creates one-off named tuples for concisely passing data from the fixture method to the test methods.
 
-generate_true_false_matrix_from_named_tuple creates a list of true and false 
-values, and a list of corresponding ids,
+generate_true_false_matrix_from_named_tuple creates a list of true and false values, and a list of corresponding ids,
 to be passed into a test fixture.
 
-generate_true_false_matrix_from_list_of_strings is a convenience function
-It takes a string name and a list of strings, and returns the true-false matrix
-built from those values. 
+generate_true_false_matrix_from_list_of_strings is a convenience function. It takes a string name and a list of 
+strings, and returns the true-false matrix built from those values. 
 
-assert_has_only_these_calls asserts that the mock has been called with the 
-specified calls and only the specified calls. 
+generate_combination_matrix_from_dataclass creates a list of instances of a dataclass containing all the possible 
+values of the fields of that dataclass. Provided all the fields are either bool or enum and that the total number of
+possible values is less than 1,000,000.
+
+assert_has_only_these_calls asserts that the mock has been called with the specified calls and only the specified 
+calls. 
+
+assert_lists_contain_same_items checks that two lists contain all of the same items, in any order.
 
 ============ Change Log ============
+02/20/2024 = Add generate_combination_matrix_from_dataclass and assert_lists_contain_same_items.
+             Add comments to generate_true_false_matrix_from_namedtuple.
+
 01/17/2023 = Added generate_true_false_matrix_from_list_of_strings
 
 01/11/2023 = Added assert_has_only_these_calls
@@ -41,9 +47,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
-__version__ = "0.3.1"
+__version__ = "0.4.0"
 
+import dataclasses
 from collections import namedtuple
+from enum import Enum
+from itertools import product
 
 
 def make_namedtuple(class_name, **fields):
@@ -168,6 +177,113 @@ def generate_true_false_matrix_from_list_of_strings(name, input_strings):
     """
     named_tuple_for_generating = namedtuple(name, input_strings)
     return generate_true_false_matrix_from_namedtuple(named_tuple_for_generating)
+
+
+def generate_combination_matrix_from_dataclass(input_dataclass: dataclasses.dataclass) -> list:
+    """
+    When given a dataclass (the class, not an instance), whose fields are all either boolean or enums, it will return 
+    two lists. The first list will contain instances of the dataclass covering all possible values of the fields. 
+    The second list will be the test_ids of those instances. If the dataclass provides a .test_id(self) function, 
+    that function will be used to generate the test_ids. Otherwise, the dataclass's __str__(self) function will be used.
+
+    Function will generate up to a maximum of 1,000,000 instances. That limit was chosen arbitrarily and may be 
+    changed with testing.
+
+    :param input_dataclass: A dataclass (not an instance), whose fields are all either boolean or enums.
+    :return: Two lists: dataclass_matrix and test_ids. dataclass_matrix is the list of instances of input_dataclass 
+             covering all possible values of the fields. test_ids is the list of strings that describe those instances.
+
+    :raises TypeError: If input_dataclass is not a dataclass or is an instance of a dataclass. 
+    :raises TypeError: If any of the fields of the dataclass are not a subclass of either bool or Enum.
+    :raises ValueError: If the total number of possible values excees 1,000,000.
+    
+    Given:
+
+    class Colors(Enum):
+        BROWN = 0
+        BLACK = 1
+        RED = 2
+
+    @dataclass
+    class Car:
+        runs: bool
+        color: Colors
+
+        def test_id(self):
+            return f"Car(runs={self.runs}, color={self.color})"
+
+    The first list will be:
+    [
+        Car(runs=True, color=Colors.BLACK),
+        Car(runs=True, color=Colors.BROWN),
+        Car(runs=True, color=Colors.RED),
+        Car(runs=False, color=Colors.BLACK),
+        Car(runs=False, color=Colors.BROWN),
+        Car(runs=False, color=Colors.RED)
+    ]
+
+    The second list will be:
+    [
+        "Car(runs=True, color=Colors.BLACK)",
+        "Car(runs=True, color=Colors.BROWN)",
+        "Car(runs=True, color=Colors.RED)",
+        "Car(runs=False, color=Colors.BLACK)",
+        "Car(runs=False, color=Colors.BROWN)",
+        "Car(runs=False, color=Colors.RED)"
+    ]
+    """
+    if not dataclasses.is_dataclass(input_dataclass):
+        raise TypeError("input_dataclass must be of type dataclass")
+    if not isinstance(input_dataclass, type):
+        raise TypeError("input_dataclass must be a dataclass and not an instance of a dataclass")
+
+    if hasattr(input_dataclass, "test_id"):
+        string_function = input_dataclass.test_id
+    else:
+        string_function = input_dataclass.__str__
+
+    all_field_values = []
+    total_number_of_values = 1
+    for field in dataclasses.fields(input_dataclass):   
+        if issubclass(field.type, bool):
+            this_field_values = [
+                {
+                    field.name: True
+                },
+                {
+                    field.name: False
+                }
+            ]
+        elif issubclass(field.type, Enum):
+            this_field_values = [
+                { field.name: value } for value in field.type
+            ]
+        else:
+            raise TypeError(
+                f"All of the fields of the dataclass must be of either {bool} or {Enum}," 
+                f"field {field} is of {field.type}."
+            )
+        total_number_of_values *= len(this_field_values)
+        all_field_values.append(this_field_values)
+    
+    if total_number_of_values > 1_000_000:
+        # Sanity check. Chosen limit is arbitrary and may be changed with testing.
+        raise ValueError(f"The total possible combinations of values exceeds safe limits. A total of {total_number_of_values} combinations is possible given the inputs. The safe limit is set at 1,000,000.")
+    
+    all_combinations_of_values = product(*all_field_values)
+    
+    dataclass_matrix = []
+    test_ids = []
+
+    for combination in all_combinations_of_values:
+        unified_dict_for_item = {}
+        for sub_dict in combination:
+            unified_dict_for_item.update(sub_dict)
+        combination_as_a_dataclass_instance = input_dataclass(**unified_dict_for_item)
+        dataclass_matrix.append(combination_as_a_dataclass_instance)
+        test_ids.append(string_function(combination_as_a_dataclass_instance))
+
+    return dataclass_matrix, test_ids
 
 
 def assert_has_only_these_calls(mock, calls, any_order=False):
