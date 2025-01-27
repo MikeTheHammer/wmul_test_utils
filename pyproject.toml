@@ -10,7 +10,7 @@ authors = [
 ]
 description = "Various utilities for testing WMUL-FM's other packages."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
@@ -26,7 +26,7 @@ dependencies = []
 
 [project.optional-dependencies]
 test = [
-  "pytest", "pytest-mock"
+  "pytest", "pytest-mock", "faker"
 ]
 tox = [
   "tox"
