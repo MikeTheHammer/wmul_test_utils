@@ -23,6 +23,11 @@ These are utilities that help with testing WMUL-FM's other python modules.
 
 6. `assert_lists_contain_same_items` asserts that every item in list one is also in list2 and vice-versa, in any order.
 
+7. `random_case_string` will take an input string and generate a new string from it with the case randomized.
+
+8. `multiple_random_case_strings` will take an input string, and an optional number of iterations, and return a list of
+    strings with the case randomized. (By calling `random_case_string` multiple times.)
+
 ## make_namedtuple(class_name, **fields)
 
 `class_name`: The name of the tuple class. Same as `namedtuple(class_name=)`.
@@ -342,3 +347,56 @@ modified_object6 = replace_with_fake_data(
 ```
 
 `modified_object6` will be a shallow copy of `obj1` with the `.name` field set to `Rednaxela Elyk`.
+
+## random_case_string(input_string: str, seed: Union[int, None] = None) -> str
+
+`random_case_string` will take an input string and generate a new string from it with the case randomized.
+
+Args:  
+`input_string` The string from which to generate the randomly cased string.  
+`seed` The seed for Python's `random` module.  
+`returns` A version of `input_string` with the case of each letter randomized.
+
+Given:
+
+```python
+input_string = "foobarbaz"
+
+result = random_case_string(input_string=input_string)
+```
+
+`result` will be something like:
+
+```python
+'fOobArBaZ'
+```
+
+## multiple_random_case_strings(input_string: str, iterations: int = 5, seed: Union[int, None] = None) -> list[str]
+
+`multiple_random_case_strings` will take an input string, and an optional number of iterations, and return a list of
+    strings with the case randomized. (By calling `random_case_string` multiple times.)
+
+Args:  
+`input_string` The string from which to generate the randomly cased strings.  
+`iterations` How many strings to return.  
+`seed` The seed for Python's `random` module. The seed will be set inside this function and no seed will be passed to
+    `random_case_string`. (Otherwise, `random_case_string` would return the same string every time it is called.)  
+`returns` A version of `input_string` with the case of each letter randomized.
+
+Given:
+
+```python
+input_string = "foobarbaz"
+
+result_strings = multiple_random_case_strings(input_string=input_string, iterations=3)
+```
+
+`result_strings` will be something like:
+
+```python
+expected_strings = [
+    'fOobArBaZ',
+    'FOobArBaZ',
+    'FoObaRBaZ'
+]
+```
