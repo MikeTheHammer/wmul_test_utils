@@ -185,7 +185,7 @@ def generate_true_false_matrix_from_list_of_strings(name, input_strings):
     return generate_true_false_matrix_from_namedtuple(named_tuple_for_generating)
 
 
-def generate_combination_matrix_from_dataclass(input_dataclass: dataclasses.dataclass) -> list:
+def generate_combination_matrix_from_dataclass(input_dataclass) -> tuple[list, list]:
     """
     When given a dataclass (the class, not an instance), whose fields are all either boolean or enums, it will return 
     two lists. The first list will contain instances of the dataclass covering all possible values of the fields. 
