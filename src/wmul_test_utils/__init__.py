@@ -22,7 +22,14 @@ assert_lists_contain_same_items checks that two lists contain all of the same it
 
 FieldsToReplace and replace_with_fake_data will replace the fields of an object with fake data. 
 
+random_case_string will take an input string and generate a new string from it with the case randomized.
+
+multiple_random_case_strings will take an input string, and an optional number of iterations, and return a list of 
+strings with the case randomized. (By calling random_case_string multiple times.)
+
 ============ Change Log ============
+05/23/2025 = Add random_case_string and multiple_random_case_strings
+
 01/27/2025 = Add FieldsToReplace and replace_with_fake_data.
 
 02/20/2024 = Add generate_combination_matrix_from_dataclass and assert_lists_contain_same_items.
@@ -51,14 +58,15 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 import dataclasses
+import random
 from collections import namedtuple
 from copy import copy
 from enum import Enum
 from itertools import product
-from typing import List
+from typing import List, Union
 
 
 def make_namedtuple(class_name, **fields):
@@ -485,3 +493,17 @@ def replace_with_fake_data(input_object: object, fields_to_replace: List[FieldTo
         new_value = field.replacement_function(*func_arg, **func_kwarg)
         setattr(copy_object, field.field_name, new_value)
     return copy_object
+
+
+def random_case_string(input_string: str, seed: Union[int, None] = None) -> str:
+    if seed:
+        random.seed(seed)
+    return ''.join(random.choice((str.upper, str.lower))(char) for char in input_string)
+
+
+def multiple_random_case_strings(input_string: str, iterations: int = 5, seed: Union[int, None] = None) -> list[str]:
+    if seed:
+        random.seed(seed)
+        # Set the seed here. If the seed is passed to random_case_string, it will regenerate the same string for each 
+        # iteration.
+    return [random_case_string(input_string=input_string) for _ in range(iterations)]
